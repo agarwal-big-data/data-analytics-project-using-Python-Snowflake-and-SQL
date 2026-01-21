@@ -1,5 +1,7 @@
 # Data Analytics Project using Python, Snowflake, and SQL
 
+<img width="1144" height="405" alt="image" src="https://github.com/user-attachments/assets/58375041-0a53-40d7-b501-02bdaf0ca4fc" />
+
 ## 📌 Project Description
 This is an **end-to-end data analytics project** built using **Python, Amazon S3, Snowflake, and SQL** on the **Yelp Open Dataset**.
 
