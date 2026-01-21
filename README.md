@@ -81,5 +81,4 @@ Source: Yelp Open Dataset
 
 ## 📌 Conclusion
 This project demonstrates a **modern data analytics workflow**, starting from raw data ingestion to actionable insights using cloud-native tools.  
-It reflects practical **data engineering and analytics skills** applicable to real-world business scenarios.
 
