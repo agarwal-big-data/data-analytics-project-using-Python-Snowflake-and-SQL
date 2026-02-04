@@ -1,127 +1,113 @@
-# -------------------------------
-# IMPORTS (inbuilt Python modules)
-# -------------------------------
-
+# We import the json module.
+# "import" means we are bringing ready-made Python tools into our program.
+# json is used to work with JSON data.
+# In this program, we do not directly use json functions,
+# but we keep it to clearly show that the file contains JSON records.
 import json
-# json is an inbuilt Python module used to work with JSON data.
-# In this script, we are NOT directly using json functions,
-# but we keep it for clarity to show the file contains JSON records.
 
+
+# We import the os module.
+# os helps Python talk to the operating system.
+# It is used for working with folders and file paths.
 import os
-# os is an inbuilt Python module used for interacting with the Operating System.
-# We use it here for:
-# - creating directories
-# - safely joining file paths
 
 
-# -------------------------------
-# USER-DEFINED VARIABLES
-# -------------------------------
-
+# We create a variable named input_file.
+# A variable is like a named box that stores a value.
+# This box stores TEXT (a file path).
+# This path tells Python where the large JSON file is located on the computer.
 input_file = "/Users/deepdata/Downloads/Yelp JSON/yelp_dataset/yelp_academic_dataset_review.json"
-# input_file is a variable created by us.
-# It stores the absolute path of the large Yelp JSON file.
-# IMPORTANT: This file contains ONE JSON object per line.
-
-output_prefix = "split_file_"
-# output_prefix is a user-defined variable.
-# It will be used to name the output files like:
-# split_file_1.json, split_file_2.json, etc.
-
-num_files = 10
-# num_files tells Python into how many parts
-# we want to split the big JSON file.
-
-output_dir = "/Users/deepdata/Downloads/yelp_splits"
-# output_dir stores the directory path
-# where all the smaller split files will be saved.
 
 
-# -------------------------------
-# DIRECTORY CREATION
-# -------------------------------
-
-os.makedirs(output_dir, exist_ok=True)
-# os.makedirs() is an inbuilt function from the os module.
-# It creates the directory if it does not exist.
-# exist_ok=True means:
-# - Do NOT throw an error if the folder already exists.
-
-
-# -------------------------------
-# COUNT TOTAL LINES IN FILE
-# -------------------------------
-
-with open(input_file, "r", encoding="utf8") as f:
-    # open() is an inbuilt Python function to open a file.
-    # "r" means read mode.
-    # encoding="utf8" ensures proper reading of special characters.
-
-    total_lines = sum(1 for _ in f)
-    # sum() is an inbuilt function.
-    # This line:
-    # - loops over every line in the file
-    # - counts how many lines exist
-    # Each line = one JSON record
-
-# At this point, Python has reached the end of the file.
-
-
-lines_per_file = total_lines // num_files
-# // is floor division.
-# This calculates how many lines should go into EACH split file.
+# We create a variable named output_prefix.
+# This variable stores TEXT.
+# This text will be used as the START of every output file name.
 # Example:
-# If total_lines = 1000 and num_files = 10
-# lines_per_file = 100
+# split_file_1.json
+# split_file_2.json
+# split_file_3.json
+output_prefix = "split_file_"
 
 
-print(f"Total lines: {total_lines}, Lines per file: {lines_per_file}")
-# print() is an inbuilt function used to display output.
-# f-string is used to insert variable values into text.
+# We create a variable named num_files.
+# This variable stores a NUMBER.
+# This number tells Python into how many smaller files
+# the big JSON file should be divided.
+num_files = 10
 
 
-# -------------------------------
-# SPLITTING THE FILE
-# -------------------------------
+# We create a variable named output_dir.
+# This variable stores the folder location where
+# all the split files will be saved.
+output_dir = "/Users/deepdata/Downloads/yelp_splits"
 
+
+# We tell Python to create the folder stored in output_dir.
+# os.makedirs() creates folders.
+# exist_ok=True means:
+# if the folder already exists, do NOT show an error.
+os.makedirs(output_dir, exist_ok=True)
+
+
+# We open the large JSON file in READ mode.
+# "r" means read-only mode.
+# encoding="utf8" allows reading special characters safely.
 with open(input_file, "r", encoding="utf8") as f:
-    # We open the input file AGAIN because earlier
-    # we already reached the end while counting lines.
 
+    # We count how many lines are in the file.
+    # Each line contains ONE JSON object.
+    # sum(1 for _ in f) means:
+    # add 1 for every line found in the file.
+    total_lines = sum(1 for _ in f)
+
+
+# We calculate how many lines should go into EACH split file.
+# // means division without decimal (whole number only).
+lines_per_file = total_lines // num_files
+
+
+# We print information on the screen.
+# This helps us verify that the calculation is correct.
+print(f"Total lines: {total_lines}, Lines per file: {lines_per_file}")
+
+
+# We open the input file AGAIN.
+# This is necessary because the file was fully read earlier
+# while counting lines.
+with open(input_file, "r", encoding="utf8") as f:
+
+    # This loop runs num_files times.
+    # Each loop creates ONE output split file.
     for i in range(num_files):
-        # range() is an inbuilt function.
-        # This loop runs num_files times.
-        # i starts from 0 and goes to num_files - 1.
 
+        # We create the full output file path.
+        # os.path.join safely joins folder path and file name.
+        # i+1 is used so file numbering starts from 1 instead of 0.
         output_filename = os.path.join(
-            output_dir, f"{output_prefix}{i+1}.json"
+            output_dir,
+            f"{output_prefix}{i+1}.json"
         )
-        # os.path.join() safely joins directory and filename.
-        # i+1 is used so file numbering starts from 1, not 0.
 
+        # We open the output file in WRITE mode.
+        # "w" means write mode (creates a new file).
         with open(output_filename, "w", encoding="utf8") as out_file:
-            # Open a new output file in WRITE mode.
 
+            # This loop controls how many lines
+            # will be written into the current split file.
             for j in range(lines_per_file):
-                # Inner loop controls how many lines
-                # go into the current split file.
 
+                # We read ONE line from the input file.
                 line = f.readline()
-                # readline() is an inbuilt file method.
-                # It reads ONE line from the input file at a time.
 
+                # If no line is returned,
+                # it means the input file has ended.
                 if not line:
-                    # If line is empty, it means
-                    # we reached the end of the input file.
                     break
 
+                # We write the line into the current output file.
                 out_file.write(line)
-                # write() writes the line into the output file.
 
 
-# -------------------------------
-# COMPLETION MESSAGE
-# -------------------------------
-
+# We print a final message to confirm that the task is completed.
 print("✅ JSON file successfully split into smaller parts!")
-# Final confirmation message once the process is complete.
+
